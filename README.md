@@ -1,95 +1,82 @@
-# Rei
+> Intended to be used in my personal projects (mostly discord bots)
 
-Rei is a fast LRU cache with optional TTL.
-ReiT is the same LRU cache without TTL for maximum speed.
-Standalone. No dependencies.
+# **Rei**
+
+Rei is a high-performance LRU cache with optional TTL.
+ReiT is the same cache without TTL for maximum speed.
+Fully standalone. Zero dependencies.
 
 ---
 
-## Setup
+## **Install / Load**
 
 ```js
 import { Rei, ReiT } from "./rei.js";
 ```
 
-* `Rei(max, ttl)` → LRU + TTL
-* `ReiT(max)` → LRU only, TTL not used
+---
+
+## **Overview**
+
+* **Rei(max, ttl)** – LRU with TTL support
+* **ReiT(max)** – LRU only (faster, no TTL path)
+* Arrays + typed arrays internally
+* All operations are **O(1)**
+* Designed for performance-critical use (e.g., bots, workers)
 
 ---
 
-## Usage
+## **API**
 
-```js
-const c = new Rei(max, ttl);
-const t = new ReiT(max);
-```
+### **Constructors**
 
----
+* **Rei(max, ttl)**
+  Creates an LRU cache with optional TTL enforcement.
 
-## API
-
-### Constructors
-
-* `Rei(max, ttl)`
-  Creates an LRU cache with optional TTL.
-* `ReiT(max)`
-  Creates an LRU cache without TTL.
+* **ReiT(max)**
+  LRU variant without TTL.
 
 ---
 
-### Core Methods
+### **Core**
 
-* `set(key, value, ttl?)`
-  Store a value and mark it most recently used.
-* `get(key)`
-  Retrieve value and update LRU order.
-* `has(key)`
-  Check if a key exists (TTL enforced in Rei).
-* `delete(key)`
-  Remove a key.
-* `clear()`
-  Remove all keys.
+* **set(key, value, ttl?)** – Insert or update
+* **get(key)** – Get and mark as most-recent
+* **has(key)** – Existence check (TTL enforced in Rei)
+* **delete(key)** – Remove key
+* **clear()** – Reset cache
+* **length** – Current size
 
 ---
 
-### Non-LRU / Inspection
+### **Non-LRU / Inspection**
 
-* `peek(key)`
-  Get value without updating LRU order.
-* `peekHas(key)`
-  Check if key exists without TTL check or LRU update.
+* **peek(key)** – Get without touching LRU
+* **peekHas(key)** – Check existence without TTL or LRU
 
 ---
 
-### Batch Methods
+### **Batch**
 
-* `setMany([[key, value, ttl?], ...])`
-  Set multiple entries.
-* `getMany([keys], out?)`
-  Get multiple entries.
-* `deleteMany([keys])`
-  Remove multiple entries.
+* **setMany(entries)** – `[[key, value, ttl?], ...]`
+* **getMany(keys, out?)** – Bulk get
+* **deleteMany(keys)** – Bulk remove
 
 ---
 
-### Utility
+### **Utility**
 
-* `getOr(key, fallback)`
-  Return fallback if key missing.
-* `setNX(key, value, ttl?)`
-  Set only if key does not exist.
-* `incr(key, delta)`
-  Increment numeric value.
-* `pop(key)`
-  Get and delete.
-* `length`
-  Current size.
+* **getOr(key, fallback)** – Fallback read
+* **setNX(key, value, ttl?)** – Set only if missing
+* **incr(key, delta)** – Increment numeric value
+* **pop(key)** – Get and delete
 
 ---
 
-## Notes
+## **Notes**
 
-* Rei enforces TTL.
-* ReiT does not use TTL.
-* Both maintain strict LRU order.
-* All operations are constant time.
+* Rei enforces TTL per-entry or via default TTL.
+* ReiT ignores TTL entirely.
+* Strict LRU order maintained at all times.
+* Not intended as a Redis/Memcached replacement, but fast enough for practical in-app caching.
+
